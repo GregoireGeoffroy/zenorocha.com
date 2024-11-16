@@ -1,11 +1,18 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { styled } from '../stitches.config'
 
 export default function Pronunciation() {
   const pronunciationAudio = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const togglePronunciation = () => {
+    if (!mounted) return
+
     if (
       pronunciationAudio.current !== null &&
       pronunciationAudio.current.duration > 0 &&
@@ -19,15 +26,17 @@ export default function Pronunciation() {
     }
   }
 
+  if (!mounted) {
+    return null
+  }
+
   return (
     <Button
       role="button"
       aria-label="How to pronounce my name"
       onClick={togglePronunciation}
     >
-      <Icon
-        className={`ri-${isPlaying ? 'pause' : 'play' }-circle-fill`}
-      />
+      <Icon className={`ri-${isPlaying ? 'pause' : 'play'}-circle-fill`} />
       <audio
         src="/static/audio/pronunciation.mp3"
         ref={pronunciationAudio}

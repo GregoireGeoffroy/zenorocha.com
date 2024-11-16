@@ -1,52 +1,43 @@
-import { styled } from '../stitches.config'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { styled } from '../stitches.config'
+import { motion, AnimatePresence } from 'framer-motion'
 import readingTime from 'reading-time'
 
 export default function FeaturedArticle(props) {
+  const [hovered, setHovered] = useState(false)
   const stats = readingTime(props.content)
 
   return (
-    <Article href={props.href}>
-      <Animation index={props.index}>
-        <Container>
+    <StyledLink href={props.href}>
+      <Container>
+        <AnimContainer
+          onHoverStart={() => setHovered(true)}
+          onHoverEnd={() => setHovered(false)}
+        >
           <ImageContainer css={{ backgroundImage: `url(${props.image})` }} />
           <Content>
             <Title>{props.title}</Title>
             <Description>{props.description}</Description>
             <Stats>{stats.text}</Stats>
           </Content>
-        </Container>
-      </Animation>
-    </Article>
+          <AnimatePresence>
+            {hovered && (
+              <AnimHovered
+                layoutId={`featured-${props.index}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </AnimatePresence>
+        </AnimContainer>
+      </Container>
+    </StyledLink>
   )
 }
 
-function Animation(props) {
-  const [hovered, setHovered] = useState('')
-  const isHovered = hovered === props.index
-
-  return (
-    <AnimContainer
-      onHoverStart={() => setHovered(props.index)}
-      onHoverEnd={() => setHovered('')}
-      className="featured-article-anim"
-    >
-      {isHovered && (
-        <AnimHovered
-          layoutId="featuredArticles"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        />
-      )}
-
-      {props.children}
-    </AnimContainer>
-  )
-}
-
-const Article = styled('a', {
+const StyledLink = styled(Link, {
   border: '0',
   width: '370px',
   marginLeft: '20px',

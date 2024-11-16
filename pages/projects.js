@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { AnimateSharedLayout } from 'framer-motion'
+import { LayoutGroup } from 'framer-motion'
 import Base from '../layouts/Base'
 import FeaturedProject from '../components/FeaturedProject'
 import { FeaturedProjects } from '../components/FeaturedProjects'
@@ -77,7 +77,7 @@ function Projects(props) {
         <meta content={`https://zenorocha.com${image}`} property="og:image" />
       </Head>
 
-      <AnimateSharedLayout>
+      <LayoutGroup>
         <p dangerouslySetInnerHTML={{ __html: description }} />
 
         <h2>Featured Projects</h2>
@@ -85,7 +85,7 @@ function Projects(props) {
 
         <h2>All Projects</h2>
         {renderAll()}
-      </AnimateSharedLayout>
+      </LayoutGroup>
     </>
   )
 }

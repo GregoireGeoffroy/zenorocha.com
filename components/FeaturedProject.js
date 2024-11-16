@@ -2,6 +2,7 @@ import { styled } from '../stitches.config'
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import Lottie from 'lottie-react'
+import Link from 'next/link'
 
 export default function FeaturedProject(props) {
   const { project } = props
@@ -10,9 +11,10 @@ export default function FeaturedProject(props) {
   const iconRef = useRef()
 
   return (
-    <Project
+    <ProjectLink
       href={project.url}
       target="_blank"
+      rel="noopener noreferrer"
       onMouseEnter={() => iconRef.current?.play()}
       onMouseLeave={() => iconRef.current?.stop()}
     >
@@ -30,20 +32,20 @@ export default function FeaturedProject(props) {
           {project.stats && <Stats>{project.stats}</Stats>}
         </Body>
       </Animation>
-    </Project>
+    </ProjectLink>
   )
 }
 
 function Animation(props) {
-  const [hovered, setHovered] = useState('')
-  const isHovered = hovered === props.index
+  const [hovered, setHovered] = useState(false)
 
   return (
     <AnimContainer
-      onHoverStart={() => setHovered(props.index)}
-      onHoverEnd={() => setHovered('')}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
     >
-      {isHovered && (
+      {props.children}
+      {hovered && (
         <AnimHovered
           layoutId="featuredProjects"
           initial={{ opacity: 0 }}
@@ -51,13 +53,11 @@ function Animation(props) {
           exit={{ opacity: 0 }}
         />
       )}
-
-      {props.children}
     </AnimContainer>
   )
 }
 
-const Project = styled('a', {
+const ProjectLink = styled('a', {
   display: 'flex',
   transition: 'opacity $duration ease-in-out',
   border: '0',

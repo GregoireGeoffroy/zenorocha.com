@@ -2,8 +2,8 @@ import { styled } from '../stitches.config'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { motion, AnimateSharedLayout } from 'framer-motion'
-import { useKBar } from 'kbar'
+import { motion, LayoutGroup } from 'framer-motion'
+import { useCommandMenu } from '../hooks/useCommandMenu'
 
 export default function Navbar() {
   const router = useRouter()
@@ -18,10 +18,10 @@ export default function Navbar() {
     'Reminder',
   ]
   const [hovered, setHovered] = useState('')
-  const { query } = useKBar()
+  const { openCommandMenu } = useCommandMenu()
 
   return (
-    <AnimateSharedLayout>
+    <LayoutGroup>
       <Header>
         <Link href="/" passHref>
           <ButtonLogo as="a">z</ButtonLogo>
@@ -35,31 +35,29 @@ export default function Navbar() {
 
               return (
                 <li key={page}>
-                  <Link href={path} passHref>
-                    <Anchor>
-                      <NavContainer
-                        onHoverStart={() => setHovered(page)}
-                        onHoverEnd={() => setHovered('')}
-                        css={
-                          router.pathname == path
-                            ? {
-                                color: '$primary',
-                                '&::after': { opacity: 1 },
-                              }
-                            : ''
-                        }
-                      >
-                        {isHovered && (
-                          <NavHovered
-                            layoutId="nav"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                          />
-                        )}
-                        {page}
-                      </NavContainer>
-                    </Anchor>
+                  <Link href={path} legacyBehavior={false}>
+                    <NavContainer
+                      onHoverStart={() => setHovered(page)}
+                      onHoverEnd={() => setHovered('')}
+                      css={
+                        router.pathname == path
+                          ? {
+                              color: '$primary',
+                              '&::after': { opacity: 1 },
+                            }
+                          : ''
+                      }
+                    >
+                      {isHovered && (
+                        <NavHovered
+                          layoutId="nav"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        />
+                      )}
+                      {page}
+                    </NavContainer>
                   </Link>
                 </li>
               )
@@ -72,14 +70,14 @@ export default function Navbar() {
             as="button"
             type="button"
             aria-label="Command"
-            onClick={query.toggle}
+            onClick={openCommandMenu}
             css={{ padding: '0 8px' }}
           >
             <Icon className="ri-command-line" />
           </ButtonHeader>
         </Aside>
       </Header>
-    </AnimateSharedLayout>
+    </LayoutGroup>
   )
 }
 

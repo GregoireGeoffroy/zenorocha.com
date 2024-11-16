@@ -2,12 +2,17 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { styled } from '../stitches.config'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function FeaturedTalk(props) {
   const { talk } = props
 
   return (
-    <Talk href={talk.presentations[0].video} target="_blank">
+    <TalkLink 
+      href={talk.presentations[0].video}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <Animation index={props.index}>
         <Content>
           <ImageContainer>
@@ -20,7 +25,7 @@ export default function FeaturedTalk(props) {
           </div>
         </Content>
       </Animation>
-    </Talk>
+    </TalkLink>
   )
 }
 
@@ -47,7 +52,7 @@ function Animation(props) {
   )
 }
 
-const Talk = styled('a', {
+const TalkLink = styled('a', {
   marginTop: 20,
   border: 0,
   textDecoration: 'none',

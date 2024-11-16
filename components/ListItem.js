@@ -9,16 +9,14 @@ export default function ListItem(props) {
   if (props.href.charAt(0) === '/') {
     return (
       <ArticleItem>
-        <Link href={props.href} passHref>
-          <Anchor>
-            <Animation index={props.index}>
-              <Title>{props.title}</Title>
-              <Date>
-                <BlogDate dateString={props.date} />
-              </Date>
-            </Animation>
-          </Anchor>
-        </Link>
+        <StyledLink href={props.href}>
+          <Animation index={props.index}>
+            <Title>{props.title}</Title>
+            <Date>
+              <BlogDate dateString={props.date} />
+            </Date>
+          </Animation>
+        </StyledLink>
       </ArticleItem>
     )
   }
@@ -26,28 +24,28 @@ export default function ListItem(props) {
   // Podcasts
   return (
     <Item>
-      <Anchor href={props.href} target="_blank">
+      <ExternalLink href={props.href} target="_blank" rel="noopener noreferrer">
         <Animation index={props.index}>
           <Title>{props.title}</Title>
           <IconContainer>
             <i className="ri-arrow-right-up-line"></i>
           </IconContainer>
         </Animation>
-      </Anchor>
+      </ExternalLink>
     </Item>
   )
 }
 
 function Animation(props) {
-  const [hovered, setHovered] = useState('')
-  const isHovered = hovered === props.index
+  const [hovered, setHovered] = useState(false)
 
   return (
     <AnimContainer
-      onHoverStart={() => setHovered(props.index)}
-      onHoverEnd={() => setHovered('')}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
     >
-      {isHovered && (
+      {props.children}
+      {hovered && (
         <AnimHovered
           layoutId="listItem"
           initial={{ opacity: 0 }}
@@ -55,8 +53,6 @@ function Animation(props) {
           exit={{ opacity: 0 }}
         />
       )}
-
-      {props.children}
     </AnimContainer>
   )
 }
@@ -124,4 +120,16 @@ const ArticleItem = styled(Item, {
     flexDirection: 'column',
     '@bp2': { flexDirection: 'row' },
   },
+})
+
+const StyledLink = styled(Link, {
+  textDecoration: 'none',
+  color: 'inherit',
+  display: 'block',
+})
+
+const ExternalLink = styled('a', {
+  textDecoration: 'none',
+  color: 'inherit',
+  display: 'block',
 })

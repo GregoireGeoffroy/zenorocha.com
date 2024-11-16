@@ -7,48 +7,55 @@ export default function Footer() {
       title: 'Email',
       url: '/contact',
       icon: 'ri-mail-line',
+      isExternal: false
     },
     {
       title: 'Twitter',
       url: 'https://twitter.com/zenorocha',
       icon: 'ri-twitter-line',
+      isExternal: true
     },
     {
       title: 'GitHub',
       url: 'https://github.com/zenorocha',
       icon: 'ri-github-line',
+      isExternal: true
     },
     {
       title: 'linkedin',
       url: 'https://linkedin.com/in/zenorocha',
       icon: 'ri-linkedin-line',
+      isExternal: true
     },
     {
       title: 'Instagram',
       url: 'https://instagram.com/zenorocha',
       icon: 'ri-instagram-line',
+      isExternal: true
     },
   ]
 
-  const renderAnchor = (link, index) => {
-    if (link.url.startsWith('http')) {
-      return <Anchor key={index} href={link.url} target="_blank">
-        <Title>{link.title}</Title>
-        <Icon className={link.icon} />
-      </Anchor>
+  const renderLink = (link, index) => {
+    if (link.isExternal) {
+      return (
+        <ExternalLink key={index} href={link.url} target="_blank" rel="noopener noreferrer">
+          <Title>{link.title}</Title>
+          <Icon className={link.icon} />
+        </ExternalLink>
+      )
     }
 
-    return <Link key={index} href={link.url} passHref>
-      <Anchor>
+    return (
+      <InternalLink key={index} href={link.url}>
         <Title>{link.title}</Title>
         <Icon className={link.icon} />
-      </Anchor>
-    </Link>
+      </InternalLink>
+    )
   }
 
   return (
     <Container>
-      {links.map(renderAnchor)}
+      {links.map(renderLink)}
     </Container>
   )
 }
@@ -70,7 +77,27 @@ const Icon = styled('i', {
   '@bp2': { opacity: 0, fontSize: '16px' },
 })
 
-const Anchor = styled('a', {
+const InternalLink = styled(Link, {
+  color: '$secondary',
+  display: 'flex',
+  fontSize: '15px',
+  border: 0,
+  marginLeft: '20px',
+  textDecoration: 'none',
+  textTransform: 'lowercase',
+  transition: 'color $duration ease-in-out',
+  '&:hover, &:focus': {
+    color: '$primary',
+    opacity: 1,
+  },
+  [`&:hover ${Icon}`]: {
+    transition: 'opacity $duration ease-in-out',
+    opacity: 1,
+  },
+  '&:first-child': { margin: '0' },
+})
+
+const ExternalLink = styled('a', {
   color: '$secondary',
   display: 'flex',
   fontSize: '15px',
