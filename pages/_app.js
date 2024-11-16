@@ -1,5 +1,6 @@
 import '../public/static/css/prism.css'
 import 'remixicon/fonts/remixicon.css'
+import '../styles/cmdk.css'
 
 import Router from 'next/router'
 import * as gtag from '../lib/gtag'

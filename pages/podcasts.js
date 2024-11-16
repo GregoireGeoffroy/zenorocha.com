@@ -4,7 +4,7 @@ import stripHtml from '../lib/strip-html'
 import { bytetalk, appearances, zofe } from '../data/podcasts'
 import ListItem from '../components/ListItem'
 import { ListGroup } from '../components/ListGroup'
-import { AnimateSharedLayout } from 'framer-motion'
+import { LayoutGroup } from 'framer-motion'
 
 export async function getStaticProps() {
   const meta = {
@@ -28,31 +28,27 @@ function Podcasts(props) {
 
     return items
       .filter(item => featured.includes(item.title))
-      .map((item, index) => {
-        return (
-          <ListItem
-            key={index}
-            index={index}
-            href={item.url}
-            title={item.title}
-            date={item.date}
-          />
-        )
-      })
-  }
-
-  const renderEpisode = items => {
-    return items.map((item, index) => {
-      return (
+      .map((item, index) => (
         <ListItem
-          key={index}
+          key={item.title}
           index={index}
           href={item.url}
           title={item.title}
           date={item.date}
         />
-      )
-    })
+      ))
+  }
+
+  const renderEpisode = items => {
+    return items.map((item, index) => (
+      <ListItem
+        key={item.title}
+        index={index}
+        href={item.url}
+        title={item.title}
+        date={item.date}
+      />
+    ))
   }
 
   const { title, image } = props
@@ -69,32 +65,34 @@ function Podcasts(props) {
         <meta content={`https://zenorocha.com${image}`} property="og:image" />
       </Head>
 
-      <AnimateSharedLayout>
-        <p dangerouslySetInnerHTML={{ __html: description }} />
+      <LayoutGroup>
+        <div layout>
+          <p dangerouslySetInnerHTML={{ __html: description }} />
 
-        <h2>Featured Podcasts</h2>
-        <ListGroup>{renderFeatured(appearances)}</ListGroup>
+          <h2>Featured Podcasts</h2>
+          <ListGroup>{renderFeatured(appearances)}</ListGroup>
 
-        <h2>ByteTalk</h2>
-        <p>
-          A podcast where Jonni and I interview the most productive people in
-          tech.
-        </p>
-        <ListGroup>{renderEpisode(bytetalk)}</ListGroup>
+          <h2>ByteTalk</h2>
+          <p>
+            A podcast where Jonni and I interview the most productive people in
+            tech.
+          </p>
+          <ListGroup>{renderEpisode(bytetalk)}</ListGroup>
 
-        <h2>Appearances</h2>
-        <p>
-          This is the list of all the podcasts that I gave an interview so far.
-        </p>
-        <ListGroup>{renderEpisode(appearances)}</ListGroup>
+          <h2>Appearances</h2>
+          <p>
+            This is the list of all the podcasts that I gave an interview so far.
+          </p>
+          <ListGroup>{renderEpisode(appearances)}</ListGroup>
 
-        <h2>Zone Of Front-Enders</h2>
-        <p>
-          My first podcast, ZOFE, where Daniel and I talked about web
-          technologies.
-        </p>
-        <ListGroup>{renderEpisode(zofe)}</ListGroup>
-      </AnimateSharedLayout>
+          <h2>Zone Of Front-Enders</h2>
+          <p>
+            My first podcast, ZOFE, where Daniel and I talked about web
+            technologies.
+          </p>
+          <ListGroup>{renderEpisode(zofe)}</ListGroup>
+        </div>
+      </LayoutGroup>
     </>
   )
 }
