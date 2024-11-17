@@ -50,3 +50,7 @@ const GradientTitle = styled('h1', {
   MozTextFillColor: 'transparent',
   WebkitBoxDecorationBreak: 'clone',
 })
+
+const Main = styled('main', {
+  paddingTop: '72px',
+})

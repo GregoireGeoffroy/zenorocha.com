@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { motion, LayoutGroup } from 'framer-motion'
-import { useCommandMenu } from '../hooks/useCommandMenu'
+import { useCommandMenu } from '../contexts/CommandMenuContext'
 
 export default function Navbar() {
   const router = useRouter()
@@ -23,8 +23,8 @@ export default function Navbar() {
   return (
     <LayoutGroup>
       <Header>
-        <Link href="/" passHref>
-          <ButtonLogo as="a">z</ButtonLogo>
+        <Link href="/" legacyBehavior>
+          <ButtonLogo as="a">G</ButtonLogo>
         </Link>
 
         <Nav>
@@ -35,29 +35,31 @@ export default function Navbar() {
 
               return (
                 <li key={page}>
-                  <Link href={path} legacyBehavior={false}>
-                    <NavContainer
-                      onHoverStart={() => setHovered(page)}
-                      onHoverEnd={() => setHovered('')}
-                      css={
-                        router.pathname == path
-                          ? {
-                              color: '$primary',
-                              '&::after': { opacity: 1 },
-                            }
-                          : ''
-                      }
-                    >
-                      {isHovered && (
-                        <NavHovered
-                          layoutId="nav"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        />
-                      )}
-                      {page}
-                    </NavContainer>
+                  <Link href={path} legacyBehavior>
+                    <Anchor>
+                      <NavContainer
+                        onHoverStart={() => setHovered(page)}
+                        onHoverEnd={() => setHovered('')}
+                        css={
+                          router.pathname == path
+                            ? {
+                                color: '$primary',
+                                '&::after': { opacity: 1 },
+                              }
+                            : ''
+                        }
+                      >
+                        {isHovered && (
+                          <NavHovered
+                            layoutId="nav"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          />
+                        )}
+                        {page}
+                      </NavContainer>
+                    </Anchor>
                   </Link>
                 </li>
               )
@@ -96,43 +98,6 @@ const Header = styled('header', {
   '@bp2': { marginTop: '0' },
 })
 
-const List = styled('ul', {
-  margin: '0',
-  padding: '0',
-  listStyle: 'none',
-  display: 'inline-flex',
-  position: 'relative',
-  top: '5px',
-  '@bp1': { justifyContent: 'space-around' },
-})
-
-const ButtonHeader = styled('div', {
-  appearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  borderRadius: '$borderRadius',
-  color: 'white',
-  cursor: 'pointer',
-  cursor: 'pointer',
-  height: '34px',
-  padding: '0 10px',
-  transition: 'background $duration ease-in-out',
-  '&:hover': { background: '$hover' },
-})
-
-const Icon = styled('i', {
-  fontSize: '24px',
-  lineHeight: '32px',
-})
-
-const ButtonLogo = styled(ButtonHeader, {
-  fontWeight: 700,
-  fontSize: '32px',
-  textDecoration: 'none',
-  marginLeft: '12px',
-  fontFamily: '$heading',
-})
-
 const Nav = styled('nav', {
   textAlign: 'center',
   flex: 1,
@@ -142,11 +107,14 @@ const Nav = styled('nav', {
   '@bp3': { overflowX: 'scroll', overflowY: 'hidden' },
 })
 
-const Aside = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  paddingRight: '12px',
-  marginLeft: 'auto',
+const List = styled('ul', {
+  margin: '0',
+  padding: '0',
+  listStyle: 'none',
+  display: 'inline-flex',
+  position: 'relative',
+  top: '5px',
+  '@bp1': { justifyContent: 'space-around' },
 })
 
 const Anchor = styled('a', {
@@ -182,6 +150,39 @@ const NavContainer = styled(motion.span, {
     opacity: 0,
     transition: 'opacity $duration ease-in-out',
   },
+})
+
+const ButtonHeader = styled('div', {
+  appearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  borderRadius: '$borderRadius',
+  color: 'white',
+  cursor: 'pointer',
+  height: '34px',
+  padding: '0 10px',
+  transition: 'background $duration ease-in-out',
+  '&:hover': { background: '$hover' },
+})
+
+const ButtonLogo = styled(ButtonHeader, {
+  fontWeight: 700,
+  fontSize: '32px',
+  textDecoration: 'none',
+  marginLeft: '12px',
+  fontFamily: '$heading',
+})
+
+const Aside = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  paddingRight: '12px',
+  marginLeft: 'auto',
+})
+
+const Icon = styled('i', {
+  fontSize: '24px',
+  lineHeight: '32px',
 })
 
 const NavHovered = styled(motion.span, {

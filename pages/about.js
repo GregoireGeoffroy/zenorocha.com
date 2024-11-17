@@ -15,10 +15,10 @@ import downloadIcon from '../public/static/icons/download.json'
 
 export async function getStaticProps() {
   const meta = {
-    title: 'About // Zeno Rocha',
+    title: 'About // Gregoire Geoffroy',
     description:
-      "Zeno Rocha is a Brazilian creator and programmer. He currently lives in San Francisco, California, where he's the Founder & CEO at Resend. His lifelong appreciation for building software and sharing knowledge led him to speak in over 110 conferences worldwide. His passion for open source put him on the top 20 most active users on GitHub at age 22. Before moving to the US, Zeno developed multiple applications, mentored startups, and worked at major companies in Latin America, such as Globo and Petrobras.",
-    tagline: 'Create. Share. Repeat.',
+      "Gregoire Geoffroy is a French creator and programmer. Currently based in Istanbul, Turkey, he blends his technical expertise with a passion for web development and dynamic design. His journey into software began with a deep appreciation for creating intuitive, impactful user experiences. Grégoire has built numerous projects using technologies like React, TypeScript, and Webflow, showcasing his skills in both frontend and backend development. Beyond his freelance career, he actively contributes to the tech community by building tools, sharing knowledge, and developing educational applications. Previously, he worked at Sorbonne Law School, where he managed educational platforms and supported digital transformation initiatives.",
+    tagline: 'Design. Develop. Inspire.',
     image: '/static/images/about-bw.jpg',
     primaryColor: 'pink',
     secondaryColor: 'purple',
@@ -40,7 +40,7 @@ function About(props) {
       <Container>
         <Section>
           <Image
-            alt="Zeno"
+            alt="Gregoire"
             src="/static/images/avatar.jpg"
             width="336"
             height="336"
@@ -56,21 +56,18 @@ function About(props) {
               '@bp2': { marginTop: '-6px' },
             }}
           >
-            <strong>Hey, I'm Zeno Rocha</strong>
+            <strong>Hey, I'm Grégoire Geoffroy</strong>
             <Pronunciation />
-            I started as a software engineer back in 2009, working with Flash.
+            I started my journey in technology with a passion for creating engaging and dynamic digital experiences in 2012.
           </Paragraph>
           <Paragraph>
-            I'm the <strong>Founder & CEO</strong> at
-            Resend. Before that, I was a VP of Developer Experience at WorkOS and CPO at Liferay Cloud. I'm originally
-            from Brazil and now living in{' '}
-            <strong>San Francisco, California</strong> with my amazing wife and
-            beautiful daughter.
+          I'm a freelance designer and developer, specializing in building modern, interactive websites.
+          Originally from France, I now live in <strong>Istanbul, Turkey</strong>.
           </Paragraph>
           <Paragraph>
-            <strong>I love dark mode</strong>, open source, and side projects.
-            When I'm not working, I like running, watching movies, and{' '}
-            <strong>eating cheese</strong>.
+          <strong>I love dark mode</strong>, crafting personal projects, 
+          and diving into new tech stacks. When I'm not coding, 
+          I enjoy traveling, exploring cultures and food.
           </Paragraph>
         </Section>
       </Container>
@@ -188,8 +185,8 @@ function About(props) {
         <meta content={title} property="og:title" />
         <meta content={stripHtml(description)} name="description" />
         <meta content={stripHtml(description)} property="og:description" />
-        <meta content="https://zenorocha.com/about" property="og:url" />
-        <meta content={`https://zenorocha.com${image}`} property="og:image" />
+        <meta content="https://gregoiregeoffroy.com/about" property="og:url" />
+        <meta content={`https://gregoiregeoffroy.com${image}`} property="og:image" />
       </Head>
 
       {renderIntro()}

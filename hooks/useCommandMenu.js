@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 
 export function useCommandMenu() {
   const [isOpen, setIsOpen] = useState(false)
-  const router = useRouter()
 
   useEffect(() => {
     const down = (e) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setIsOpen((open) => !open)
+        console.log('Keyboard shortcut triggered')
+        setIsOpen(true)
       }
     }
 
@@ -17,7 +17,11 @@ export function useCommandMenu() {
     return () => document.removeEventListener('keydown', down)
   }, [])
 
-  const openCommandMenu = () => setIsOpen(true)
+  const openCommandMenu = () => {
+    console.log('openCommandMenu called')
+    setIsOpen(true)
+  }
+
   const closeCommandMenu = () => setIsOpen(false)
 
   return {

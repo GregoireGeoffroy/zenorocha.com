@@ -9,27 +9,27 @@ export default function Footer() {
       icon: 'ri-mail-line',
       isExternal: false
     },
-    {
-      title: 'Twitter',
-      url: 'https://twitter.com/zenorocha',
-      icon: 'ri-twitter-line',
-      isExternal: true
-    },
+    // {
+    //   title: 'Twitter',
+    //   url: '',
+    //   icon: 'ri-twitter-line',
+    //   isExternal: true
+    // },
     {
       title: 'GitHub',
-      url: 'https://github.com/zenorocha',
+      url: 'https://github.com/GregoireGeoffroy',
       icon: 'ri-github-line',
       isExternal: true
     },
     {
       title: 'linkedin',
-      url: 'https://linkedin.com/in/zenorocha',
+      url: 'https://linkedin.com/in/gregoiregeoffroy',
       icon: 'ri-linkedin-line',
       isExternal: true
     },
     {
       title: 'Instagram',
-      url: 'https://instagram.com/zenorocha',
+      url: 'https://instagram.com/gregoire.g',
       icon: 'ri-instagram-line',
       isExternal: true
     },
