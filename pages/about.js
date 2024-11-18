@@ -42,8 +42,9 @@ function About(props) {
           <Image
             alt="Gregoire"
             src="/static/images/avatar.jpg"
-            width="336"
-            height="336"
+            width={336}
+            height={336}
+            style={{ width: 'auto', height: 'auto' }}
             placeholder="blur"
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAP0lEQVQImQE0AMv/AFBQUJKSkqmpqaOjowCurq7v7+/Jycm5ubkA////jIyMn5+fg4ODADAwMD09PWlpaQAAAApRGnEHblMWAAAAAElFTkSuQmCC"
             priority
@@ -79,7 +80,7 @@ function About(props) {
     const iconStyle = { width: 24, height: 24, marginRight: 8 }
 
     return (
-      <div>
+      <section>
         <p>
           This is made for journalists, podcast hosts, and event organizers to
           copy-and-paste.
@@ -113,7 +114,7 @@ function About(props) {
             Download Headshot
           </ButtonPrimary>
         </ButtonsContainer>
-      </div>
+      </section>
     )
   }
 
@@ -219,7 +220,7 @@ const Paragraph = styled('p', {
   '@bp2': { margin: '15px 0' },
 })
 
-const ButtonsContainer = styled('p', {
+const ButtonsContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
 })

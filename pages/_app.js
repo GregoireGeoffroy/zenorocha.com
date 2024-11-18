@@ -4,6 +4,7 @@ import '../styles/cmdk.css'
 
 import Router from 'next/router'
 import * as gtag from '../lib/gtag'
+import { CommandMenuProvider } from '../contexts/CommandMenuContext'
 import CommandBar from '../components/CommandBar'
 import { useEffect, useState } from 'react'
 
@@ -34,11 +35,11 @@ export default function MyApp({ Component, pageProps }) {
   if (!mounted) return null
 
   return (
-    <>
-      <CommandBar />
+    <CommandMenuProvider>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </>
+      <CommandBar />
+    </CommandMenuProvider>
   )
 }

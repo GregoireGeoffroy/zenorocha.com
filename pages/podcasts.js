@@ -66,7 +66,7 @@ function Podcasts(props) {
       </Head>
 
       <LayoutGroup>
-        <div layout>
+        <div layoutId="podcasts-content">
           <p dangerouslySetInnerHTML={{ __html: description }} />
 
           <h2>Featured Podcasts</h2>

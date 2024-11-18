@@ -1,33 +1,15 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState } from 'react'
 
-const CommandMenuContext = createContext({
-  isOpen: false,
-  openCommandMenu: () => {},
-  closeCommandMenu: () => {},
-  setIsOpen: () => {},
-})
+const CommandMenuContext = createContext()
 
 export function CommandMenuProvider({ children }) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  const openCommandMenu = useCallback(() => {
-    console.log('Opening command menu')
-    setIsOpen(true)
-  }, [])
-
-  const closeCommandMenu = useCallback(() => {
-    setIsOpen(false)
-  }, [])
+  const openCommandMenu = () => setOpen(true)
+  const closeCommandMenu = () => setOpen(false)
 
   return (
-    <CommandMenuContext.Provider
-      value={{
-        isOpen,
-        openCommandMenu,
-        closeCommandMenu,
-        setIsOpen,
-      }}
-    >
+    <CommandMenuContext.Provider value={{ open, setOpen, openCommandMenu, closeCommandMenu }}>
       {children}
     </CommandMenuContext.Provider>
   )
@@ -35,7 +17,7 @@ export function CommandMenuProvider({ children }) {
 
 export function useCommandMenu() {
   const context = useContext(CommandMenuContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useCommandMenu must be used within a CommandMenuProvider')
   }
   return context
