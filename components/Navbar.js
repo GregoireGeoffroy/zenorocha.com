@@ -24,7 +24,7 @@ export default function Navbar() {
     <LayoutGroup>
       <Header>
         <Link href="/" legacyBehavior>
-          <ButtonLogo as="a">G</ButtonLogo>
+          <ButtonLogo as="a">g</ButtonLogo>
         </Link>
 
         <Nav>

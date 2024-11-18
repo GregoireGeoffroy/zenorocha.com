@@ -1,36 +1,39 @@
-import { styled } from '../stitches.config'
+import { ButtonPrimary } from './ButtonPrimary'
 import { useCommandMenu } from '../contexts/CommandMenuContext'
+import { useState, useEffect } from 'react'
 
 export default function ShortcutHome() {
   const { openCommandMenu } = useCommandMenu()
-  
-  return (
-    <ShortcutButton onClick={openCommandMenu}>
-      Press <Kbd>⌘</Kbd> <Kbd>K</Kbd> to start...
-    </ShortcutButton> 
-  )
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (mounted) {
+    const isMac = /(Mac)/i.test(navigator.userAgent)
+    const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent)
+
+    if (isMobile) {
+      return (
+        <ButtonPrimary as="button" onClick={openCommandMenu}>
+          Tap to start →
+        </ButtonPrimary>
+      )
+    } else if (isMac) {
+      return (
+        <ButtonPrimary as="button" onClick={openCommandMenu}>
+          Press <kbd>⌘</kbd> <kbd>K</kbd> to start →
+        </ButtonPrimary>
+      )
+    } else {
+      return (
+        <ButtonPrimary as="button" onClick={openCommandMenu}>
+          Press <kbd>ctrl</kbd> <kbd>K</kbd> to start →
+        </ButtonPrimary>
+      )
+    }
+  }
+
+  return <div />
 }
-
-const ShortcutButton = styled('button', {
-  background: 'transparent',
-  border: 'none',
-  color: '$secondary',
-  cursor: 'pointer',
-  padding: '8px 12px',
-  borderRadius: '$borderRadius',
-  fontSize: '14px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '6px',
-  transition: 'color $duration ease-in-out',
-  '&:hover': {
-    color: '$primary',
-  },
-})
-
-const Kbd = styled('kbd', {
-  background: 'rgba(255, 255, 255, .1)',
-  color: 'inherit',
-  padding: '4px 8px',
-  borderRadius: '4px',
-})

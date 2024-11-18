@@ -6,7 +6,6 @@ import Router from 'next/router'
 import * as gtag from '../lib/gtag'
 import CommandBar from '../components/CommandBar'
 import { useEffect, useState } from 'react'
-import { CommandMenuProvider } from '../contexts/CommandMenuContext'
 
 const Noop = ({ children }) => children
 
@@ -16,16 +15,30 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setMounted(true)
+
+    // Add router event listeners
+    const handleRouteChange = (url) => {
+      console.log('Route changed to:', url)
+    }
+
+    Router.events.on('routeChangeStart', handleRouteChange)
+    Router.events.on('routeChangeError', (err) => {
+      console.error('Route change error:', err)
+    })
+
+    return () => {
+      Router.events.off('routeChangeStart', handleRouteChange)
+    }
   }, [])
 
   if (!mounted) return null
 
   return (
-    <CommandMenuProvider>
+    <>
       <CommandBar />
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </CommandMenuProvider>
+    </>
   )
 }

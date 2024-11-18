@@ -1,8 +1,7 @@
 import { styled } from '../stitches.config'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Command } from 'cmdk'
-import { useCommandMenu } from '../contexts/CommandMenuContext'
 import Lottie from 'lottie-react'
 import Toast from './Toast'
 
@@ -22,8 +21,9 @@ import reminderIcon from '../public/static/icons/reminder.json'
 
 export default function CommandBar() {
   const router = useRouter()
-  const { isOpen, setIsOpen } = useCommandMenu()
+  const [isOpen, setIsOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
+  const commandBarRef = useRef(null)
   
   // All Lottie refs
   const copyLinkRef = useRef()
@@ -39,100 +39,139 @@ export default function CommandBar() {
   const usesRef = useRef()
   const reminderRef = useRef()
 
+  useEffect(() => {
+    let lastKeyPressed = ''
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setIsOpen((prev) => !prev)
+      }
+
+      if (isOpen) {
+        if (e.key === 'l') {
+          copyLink()
+        } else if (e.key === 'e') {
+          perform('/contact')()
+        }
+
+        // Handle "g" combinations
+        if (lastKeyPressed === 'g') {
+          switch (e.key) {
+            case 'h':
+              perform('/')()
+              break
+            case 'a':
+              perform('/about')()
+              break
+            case 'b':
+              perform('/articles')()
+              break
+            case 'p':
+              perform('/projects')()
+              break
+            case 't':
+              perform('/talks')()
+              break
+            case 'c':
+              perform('/podcasts')()
+              break
+            case 'i':
+              perform('/investing')()
+              break
+            case 'u':
+              perform('/uses')()
+              break
+            case 'r':
+              perform('/reminder')()
+              break
+          }
+          lastKeyPressed = ''
+        } else {
+          lastKeyPressed = e.key
+        }
+      }
+    }
+
+    const handleClickOutside = (event) => {
+      if (commandBarRef.current && !commandBarRef.current.contains(event.target)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const perform = (path) => () => {
+    console.log('Performing navigation to:', path)
+    router.push(path).then(() => {
+      setIsOpen(false)
+    })
+  }
+
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href)
     setShowToast(true)
     setIsOpen(false)
   }
 
-  const iconSize = { width: 24, height: 24 }
-
   if (!isOpen) return null
 
   return (
-    <>
+    <div ref={commandBarRef}>
       <Command.Dialog
         open={isOpen}
         onOpenChange={setIsOpen}
         label="Global Command Menu"
+        shouldFilter={false}
       >
         <StyledCommand>
-          <StyledInput placeholder="Type a command or search..." autoFocus />
+          <StyledInput placeholder="Type a command or search..." />
           <StyledList>
             <StyledGroup heading="General">
-              <StyledItem onSelect={copyLink}>
+              <StyledItem value="copy-link" onSelect={copyLink}>
                 <ItemContent>
                   <Lottie
                     lottieRef={copyLinkRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={copyLinkIcon}
                     loop={false}
                     autoplay={false}
                   />
                   <span>Copy Link</span>
                 </ItemContent>
-                <Shortcut>
-                  <Kbd>l</Kbd>
-                </Shortcut>
+                <Shortcut><Kbd>l</Kbd></Shortcut>
               </StyledItem>
-              
-              <StyledItem onSelect={() => {
-                router.push('/contact')
-                setIsOpen(false)
-              }}>
+
+              <StyledItem value="contact" onSelect={perform('/contact')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={emailRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={emailIcon}
                     loop={false}
                     autoplay={false}
                   />
                   <span>Send Email</span>
                 </ItemContent>
-                <Shortcut>
-                  <Kbd>e</Kbd>
-                </Shortcut>
-              </StyledItem>
-
-              <StyledItem onSelect={() => {
-                window.open('https://github.com/zenorocha/zenorocha.com', '_blank')
-                setIsOpen(false)
-              }}>
-                <ItemContent>
-                  <Lottie
-                    lottieRef={sourceRef}
-                    style={iconSize}
-                    animationData={sourceIcon}
-                    loop={false}
-                    autoplay={false}
-                  />
-                  <span>View Source</span>
-                </ItemContent>
-                <Shortcut>
-                  <Kbd>s</Kbd>
-                </Shortcut>
+                <Shortcut><Kbd>e</Kbd></Shortcut>
               </StyledItem>
             </StyledGroup>
 
             <StyledGroup heading="Go To">
-              <StyledItem onSelect={() => {
-                router.push('/')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="home" onSelect={perform('/')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={homeRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={homeIcon}
                     loop={false}
                     autoplay={false}
-                    onComplete={() => {
-                      if (!isSelected) {
-                        homeRef.current?.stop()
-                      }
-                    }}
-                    data-lottie
                   />
                   <span>Home</span>
                 </ItemContent>
@@ -142,14 +181,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/about')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="about" onSelect={perform('/about')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={aboutRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={aboutIcon}
                     loop={false}
                     autoplay={false}
@@ -162,14 +198,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/articles')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="articles" onSelect={perform('/articles')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={articlesRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={articlesIcon}
                     loop={false}
                     autoplay={false}
@@ -182,14 +215,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/projects')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="projects" onSelect={perform('/projects')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={projectsRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={projectsIcon}
                     loop={false}
                     autoplay={false}
@@ -202,14 +232,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/talks')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="talks" onSelect={perform('/talks')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={talksRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={talksIcon}
                     loop={false}
                     autoplay={false}
@@ -222,14 +249,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/podcasts')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="podcasts" onSelect={perform('/podcasts')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={podcastsRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={podcastsIcon}
                     loop={false}
                     autoplay={false}
@@ -242,14 +266,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/investing')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="investing" onSelect={perform('/investing')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={investingRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={investingIcon}
                     loop={false}
                     autoplay={false}
@@ -262,14 +283,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/uses')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="uses" onSelect={perform('/uses')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={usesRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={usesIcon}
                     loop={false}
                     autoplay={false}
@@ -282,14 +300,11 @@ export default function CommandBar() {
                 </Shortcut>
               </StyledItem>
 
-              <StyledItem onSelect={() => {
-                router.push('/reminder')
-                setIsOpen(false)
-              }}>
+              <StyledItem value="reminder" onSelect={perform('/reminder')}>
                 <ItemContent>
                   <Lottie
                     lottieRef={reminderRef}
-                    style={iconSize}
+                    style={{ width: 24, height: 24 }}
                     animationData={reminderIcon}
                     loop={false}
                     autoplay={false}
@@ -313,10 +328,9 @@ export default function CommandBar() {
         showToast={showToast}
         setShowToast={setShowToast}
       />
-    </>
+    </div>
   )
 }
-
 const StyledCommand = styled(Command, {
   width: '100%',
   maxWidth: '640px',
@@ -381,10 +395,19 @@ const StyledItem = styled(Command.Item, {
       color: '$primary',
     },
   },
+  '&[aria-selected="true"]': {
+    background: 'rgba(255, 255, 255, 0.1)',
+    color: '$primary',
+  },
   '&:hover': {
+    background: 'rgba(255, 255, 255, 0.1)',
     '& [data-lottie]': {
       play: true,
     },
+  },
+  '&': {
+    cursor: 'pointer',
+    userSelect: 'none',
   },
 })
 
@@ -407,3 +430,4 @@ const Kbd = styled('kbd', {
   borderRadius: '4px',
   fontSize: '12px',
 })
+

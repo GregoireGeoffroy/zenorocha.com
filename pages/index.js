@@ -11,7 +11,7 @@ export async function getStaticProps() {
   return {
     props: {
       title: 'Gregoire Geoffroy',
-      description: 'Obsessed with developer experience',
+      description: 'Obsessed with crafting seamless web experiences',
       image: '/static/images/home-bw.jpg',
     },
   }
@@ -45,9 +45,7 @@ export default function Index(props) {
             <div>
               <h1>{title}</h1>
               <p>
-                <strong>Founder & CEO at{' '}
-                  <a href="https://resend.com" target="blank">Resend</a>
-                </strong><br />
+                <strong>Full Stack Developer</strong><br />
                 {description}
               </p>
               <ShortcutHome />
